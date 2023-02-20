@@ -1,0 +1,16 @@
+apiVersion: "crd.example.com/v1"
+kind: Inference
+metadata:
+  name: my-inference
+spec:
+  deployment:
+    name: my-nginx-deployment
+    image: nginx
+    replicas: 1
+    containerPort: 80
+  service:
+    name: my-nginx-service
+  ingress:
+    name: my-nginx-ingress
+    urlPath: /
+    className: nginx

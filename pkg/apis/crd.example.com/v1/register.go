@@ -4,11 +4,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"sample-controller-demo/pkg/apis/samplecontorller"
+	"sample-controller-demo/pkg/apis/crd.example.com"
 )
 
 // SchemeGroupVersion is group version used to register these objects
-var SchemeGroupVersion = schema.GroupVersion{Group: samplecontorller.GroupName, Version: "v1"}
+var SchemeGroupVersion = schema.GroupVersion{Group: crd_example_com.GroupName, Version: "v1"}
 
 // Kind takes an unqualified kind and returns a Group qualified GroupKind
 func Kind(kind string) schema.GroupKind {

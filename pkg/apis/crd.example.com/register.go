@@ -1,6 +1,6 @@
-package samplecontorller
+package crd_example_com
 
 // GroupName is the group name used in this pkg
 const (
-	GroupName = "example.com"
+	GroupName = "crd.example.com"
 )

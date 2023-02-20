@@ -1,7 +1,6 @@
 package v1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -18,11 +17,10 @@ type Inference struct {
 }
 
 type DeploymentSpec struct {
-	Name          string                      `json:"name"`
-	Image         string                      `json:"image"`
-	Replicas      int32                       `json:"replicas"`
-	ContainerPort int32                       `json:"containerPort"`
-	Resource      corev1.ResourceRequirements `json:"resource"`
+	Name          string `json:"name"`
+	Image         string `json:"image"`
+	Replicas      int32  `json:"replicas"`
+	ContainerPort int32  `json:"containerPort"`
 }
 
 type ServiceSpec struct {
