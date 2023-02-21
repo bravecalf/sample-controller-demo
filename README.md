@@ -15,10 +15,27 @@ git clone https://github.com/kubernetes/sample-controller.git
 ```
 3. 注册crd并创建对应的my-inference
 ```shell
-kubectl apply -f examples/crd.yaml
+kubectl apply -f examples/crd-status-subresource.yaml
 kubectl apply -f examples/my-inference.yaml
 ```
 4. 测试获取对应的inference
 ```go
-运行client-demo/crd_demo.go中的CrdDemoTest方法
+ 运行 client-demo/crd_demo.go中的CrdDemoTest方法
 ```
+# 二、 custom inference controller 
+1. 运行controller
+```go
+go run main.go
+```
+2. 创建crd 
+```go
+kubectl apply -f examples/crd-status-subresource.yaml
+kubectl apply -f examples/my-inference.yaml
+```
+3. 验证是否起了对应的deployment、service、ingress
+```shell
+kubectl get deployment -A |grep "my-nginx-deployment"
+kubectl get service -A |grep "my-service-deployment"
+kubectl get ingress -A |grep "my-service-ingress"
+```
+4. 访问ingress-nginx-controller的svc暴露端口,看是否能转发到niginx的界面

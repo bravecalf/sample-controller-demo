@@ -2,11 +2,13 @@ apiVersion: "crd.example.com/v1"
 kind: Inference
 metadata:
   name: my-inference
+  labels:
+    app: nginx
 spec:
   deployment:
     name: my-nginx-deployment
     image: nginx
-    replicas: 1
+    replicas: 2
     containerPort: 80
   service:
     name: my-nginx-service
@@ -14,3 +16,5 @@ spec:
     name: my-nginx-ingress
     urlPath: /
     className: nginx
+status:
+  availableReplicas: 1
