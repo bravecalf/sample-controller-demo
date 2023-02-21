@@ -7,6 +7,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"log"
+	mycontroller "sample-controller-demo/controller"
 	"sample-controller-demo/pkg/generated/clientset/versioned"
 	"sample-controller-demo/pkg/generated/informers/externalversions"
 )
@@ -39,7 +40,7 @@ func main() {
 	crdInformerFactory := externalversions.NewSharedInformerFactory(crdClient, 0)
 
 	informerFactory := informers.NewSharedInformerFactoryWithOptions(clientSet, 0, informers.WithNamespace("default"), informers.WithTweakListOptions(listOptions))
-	controller := NewInferenceController(
+	controller := mycontroller.NewInferenceController(
 		crdInformerFactory.Crd().V1().Inferences(),
 		informerFactory.Apps().V1().Deployments(),
 		informerFactory.Core().V1().Services(),

@@ -1,4 +1,4 @@
-package main
+package controller
 
 import (
 	"context"
@@ -72,7 +72,6 @@ func NewInferenceController(
 	ifInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc:    ic.addInference,
 		UpdateFunc: ic.updateInference,
-		DeleteFunc: ic.deleteInference,
 	})
 
 	dInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
@@ -277,20 +276,21 @@ func (ic *InferenceController) syncInference(ctx context.Context, dKey string) e
 	infer, err := ic.ifLister.Inferences(namespace).Get(name)
 	if errors.IsNotFound(err) {
 		// 判断infer被删除, 直接删除相关的deployment、service、ingress
-		if err := ic.kubeclient.AppsV1().Deployments(namespace).Delete(ctx, infer.Spec.Deployment.Name, metav1.DeleteOptions{}); err != nil && !errors.IsNotFound(err) {
-			log.Printf("Failed to delete deployment name[%s] in namespace[%s], error: %v \n", infer.Spec.Deployment.Name, namespace, err)
-			return err
-		}
-
-		if err := ic.kubeclient.CoreV1().Services(namespace).Delete(ctx, infer.Spec.Service.Name, metav1.DeleteOptions{}); err != nil && !errors.IsNotFound(err) {
-			log.Printf("Failed to delete service name[%s] in namespace[%s], error: %v \n", infer.Spec.Deployment.Name, namespace, err)
-			return err
-		}
-
-		if err := ic.kubeclient.NetworkingV1().Ingresses(namespace).Delete(ctx, infer.Spec.Ingress.Name, metav1.DeleteOptions{}); err != nil && !errors.IsNotFound(err) {
-			log.Printf("Failed to delete ingress name[%s] in namespace[%s], error: %v \n", infer.Spec.Ingress.Name, namespace, err)
-			return err
-		}
+		//if err := ic.kubeclient.AppsV1().Deployments(namespace).Delete(ctx, infer.Spec.Deployment.Name, metav1.DeleteOptions{}); err != nil && !errors.IsNotFound(err) {
+		//	log.Printf("Failed to delete deployment name[%s] in namespace[%s], error: %v \n", infer.Spec.Deployment.Name, namespace, err)
+		//	return err
+		//}
+		//
+		//if err := ic.kubeclient.CoreV1().Services(namespace).Delete(ctx, infer.Spec.Service.Name, metav1.DeleteOptions{}); err != nil && !errors.IsNotFound(err) {
+		//	log.Printf("Failed to delete service name[%s] in namespace[%s], error: %v \n", infer.Spec.Deployment.Name, namespace, err)
+		//	return err
+		//}
+		//
+		//if err := ic.kubeclient.NetworkingV1().Ingresses(namespace).Delete(ctx, infer.Spec.Ingress.Name, metav1.DeleteOptions{}); err != nil && !errors.IsNotFound(err) {
+		//	log.Printf("Failed to delete ingress name[%s] in namespace[%s], error: %v \n", infer.Spec.Ingress.Name, namespace, err)
+		//	return err
+		//}
+		log.Println("HHH TEST")
 	}
 
 	if err != nil {
@@ -516,26 +516,6 @@ func (ic *InferenceController) updateInference(oldObj interface{}, newObj interf
 		return
 	}
 	ic.enqueueInference(newInfer)
-}
-
-func (ic *InferenceController) deleteInference(obj interface{}) {
-	infer, ok := obj.(*crdv1.Inference)
-	if !ok {
-		// 将stone中的obj resync 同步到deltaFIFO中
-		tombstone, ok := obj.(*cache.DeletedFinalStateUnknown)
-		if !ok {
-			runtime.HandleError(fmt.Errorf("couldn't get object from tombstone %#v", obj))
-			return
-		} else {
-			infer, ok = tombstone.Obj.(*crdv1.Inference)
-			if !ok {
-				runtime.HandleError(fmt.Errorf("tombstone contained object that is not a Deployment %#v", obj))
-				return
-			}
-		}
-	}
-	log.Printf("Deleting inference [%s] in namespace [%s]. \n", infer.Name, infer.Namespace)
-	ic.enqueue(infer)
 }
 
 func (ic *InferenceController) handleObject(obj interface{}) {
