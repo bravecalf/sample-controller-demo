@@ -275,22 +275,8 @@ func (ic *InferenceController) syncInference(ctx context.Context, dKey string) e
 
 	infer, err := ic.ifLister.Inferences(namespace).Get(name)
 	if errors.IsNotFound(err) {
-		// 判断infer被删除, 直接删除相关的deployment、service、ingress
-		//if err := ic.kubeclient.AppsV1().Deployments(namespace).Delete(ctx, infer.Spec.Deployment.Name, metav1.DeleteOptions{}); err != nil && !errors.IsNotFound(err) {
-		//	log.Printf("Failed to delete deployment name[%s] in namespace[%s], error: %v \n", infer.Spec.Deployment.Name, namespace, err)
-		//	return err
-		//}
-		//
-		//if err := ic.kubeclient.CoreV1().Services(namespace).Delete(ctx, infer.Spec.Service.Name, metav1.DeleteOptions{}); err != nil && !errors.IsNotFound(err) {
-		//	log.Printf("Failed to delete service name[%s] in namespace[%s], error: %v \n", infer.Spec.Deployment.Name, namespace, err)
-		//	return err
-		//}
-		//
-		//if err := ic.kubeclient.NetworkingV1().Ingresses(namespace).Delete(ctx, infer.Spec.Ingress.Name, metav1.DeleteOptions{}); err != nil && !errors.IsNotFound(err) {
-		//	log.Printf("Failed to delete ingress name[%s] in namespace[%s], error: %v \n", infer.Spec.Ingress.Name, namespace, err)
-		//	return err
-		//}
-		log.Println("HHH TEST")
+		// ownerReference创建会直接删掉子关联资源对象
+		return nil
 	}
 
 	if err != nil {
